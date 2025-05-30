@@ -1,39 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:quote_app/api_call.dart';
-import 'package:quote_app/models/quote_model.dart';
+import 'package:get/get.dart';
+import 'package:quote_app/quote_controller.dart';
 
 class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
+   MyHomePage({super.key});
+   final QuoteController controller = Get.put(QuoteController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title:const Text('Quotes')),
-      body: FutureBuilder<QuoteModel>(
-        future: fetchQuotes(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      appBar: AppBar(title: const Text('Quotes')),
+      body: Obx((){
+          if (controller.isLoading.value) {
             return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (controller.quote.value==null) {
+            return const Center(child: Text('Error: Failed to load quote'));
           } else {
-            final quotes = snapshot.data!;
-            return Text(quotes.quote);
             
-            
-            /* ListView.builder(
-              itemCount: quotes.length,
-              itemBuilder: (context, index) {
-                final quote = quotes[index];
-                return ListTile(
-                  title: Text(quote.quote),
-                  subtitle: Text('- ${quote.writer}'),
-                );
-              },
-            ); */
+            return Obx(
+              ()=> Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '"${controller.quote.value!.quote}"',
+                    style: const TextStyle(
+                      fontSize: 32,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  Padding(padding:const EdgeInsets.only(right: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          "- ${controller.quote.value!.writer}",
+                          style: const TextStyle(fontStyle: FontStyle.italic,
+                            fontSize: 14,
+                          ),
+                          textAlign: TextAlign.right,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
           }
         },
-      ),
-    );
+     
+    ));
   }
 }

@@ -1,6 +1,6 @@
 class QuoteModel {
   final String quote;
-  final String index;
+  final int index;
   final String writer;
   QuoteModel({
     required this.quote,
@@ -9,9 +9,11 @@ class QuoteModel {
   });
   factory QuoteModel.fromJson(Map<String, dynamic> json) {
     return QuoteModel(
-      quote: json['text'] ?? '',
+      quote: json['quote'] ?? '',
       writer: json['author'] ?? 'Unknown',
       index: json['id'] ?? '',
     );
   }
 }
+
+List<QuoteModel> favorites=[];
