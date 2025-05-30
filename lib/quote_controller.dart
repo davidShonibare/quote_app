@@ -8,16 +8,33 @@ class QuoteController extends GetxController {
   var quote = Rxn<QuoteModel>();
   late Timer _timer;
   var isLoading = true.obs;
+  RxList favorites = [].obs;
+  var isFav = false.obs;
 
   @override
   void onInit() {
     super.onInit();
     fetchQuotes();
-    _timer = Timer.periodic(
-      const Duration(minutes: 30), (_) {
+    _timer = Timer.periodic(const Duration(minutes: 30), (_) {
       isLoading.value = true;
+      isFav.value = false;
       fetchQuotes();
     });
+  }
+
+  void toggleFavorites() {
+    final currentQuote = quote.value;
+    if (currentQuote == null) return;
+    final exists = favorites.any((q) => q.index == currentQuote.index);
+    if (!exists) {
+      favorites.add(currentQuote);
+      isFav.value = true;
+      print(isFav.value);
+    } else {
+      favorites.remove(currentQuote);
+      isFav.value = false;
+      print(isFav.value);
+    }
   }
 
   Future<void> fetchQuotes() async {

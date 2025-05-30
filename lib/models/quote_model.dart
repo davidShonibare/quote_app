@@ -16,4 +16,3 @@ class QuoteModel {
   }
 }
 
-List<QuoteModel> favorites=[];
