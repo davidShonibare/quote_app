@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quote_app/favourite_screen.dart';
 import 'package:quote_app/quote_controller.dart';
 
 class MyHomePage extends StatelessWidget {
@@ -15,12 +16,17 @@ class MyHomePage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: Obx(
-              () => GestureDetector(onTap: controller.toggleFavorites,
+              () => GestureDetector(
+                onTap: ()=>Get.to(()=>FavouriteScreen()),
                 child: Icon(
-                    !controller.isFav.value
-                        ? Icons.star_border_outlined
-                        : Icons.star,
-                    size: 36,color: controller.isFav.value?Colors.red: const Color.fromARGB(18, 0, 0, 0),),
+                  !controller.isFav.value
+                      ? Icons.star_border_outlined
+                      : Icons.star,
+                  size: 36,
+                  color: controller.isFav.value
+                      ? Colors.red
+                      : const Color.fromARGB(18, 0, 0, 0),
+                ),
               ),
             ),
           ),
@@ -81,7 +87,7 @@ class MyHomePage extends StatelessWidget {
                               !controller.isFav.value
                                   ? 'Add to Favorites'
                                   : 'Remove from Favorites',
-                              style: TextStyle(fontSize: 24),
+                              style: const TextStyle(fontSize: 24),
                             ),
                           ],
                         ),
