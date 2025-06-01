@@ -99,7 +99,7 @@ class QuoteController extends GetxController {
       final stored = quoteHistoryBox.getAt(0)!;
       final elapsed = now.difference(stored.lastShownTime);
 
-      if (elapsed < const Duration(seconds: 60)) {
+      if (elapsed < const Duration(hours: 24)) {
 
         quote.value = stored.history.last;
 
