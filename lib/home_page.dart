@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quote_app/favourite_screen.dart';
+import 'package:quote_app/history_screen.dart';
 import 'package:quote_app/quote_controller.dart';
 
 class MyHomePage extends StatelessWidget {
@@ -13,23 +14,31 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Daily Quotes'),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: Obx(
-              () => GestureDetector(
-                onTap: ()=>Get.to(()=>FavouriteScreen()),
-                child: Icon(
-                  !controller.isFav.value
-                      ? Icons.star_border_outlined
-                      : Icons.star,
-                  size: 36,
-                  color: controller.isFav.value
-                      ? Colors.red
-                      : const Color.fromARGB(18, 0, 0, 0),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: GestureDetector(
+                  onTap: () => Get.to(() => QuotesHistoryScreen()),
+                  child: const Icon(
+                    Icons.history,
+                    size: 24,
+                    color: Colors.black,
+                  ),
                 ),
               ),
-            ),
-          ),
+              Padding(
+                padding: const EdgeInsets.only(right: 32.0),
+                child: GestureDetector(
+                  onTap: () => Get.to(() => FavouriteScreen()),
+                  child:const Icon(
+                    Icons.bookmarks,
+                    size: 24,
+                  ),
+                ),
+              ),
+            ],
+          )
         ],
       ),
       body: Obx(
@@ -88,6 +97,20 @@ class MyHomePage extends StatelessWidget {
                                   ? 'Add to Favorites'
                                   : 'Remove from Favorites',
                               style: const TextStyle(fontSize: 24),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 16.0),
+                              child: Obx(
+                                () => Icon(
+                                  !controller.isFav.value
+                                      ? Icons.star_border_outlined
+                                      : Icons.star,
+                                  size: 36,
+                                  color: controller.isFav.value
+                                      ? Colors.red
+                                      : const Color.fromARGB(18, 0, 0, 0),
+                                ),
+                              ),
                             ),
                           ],
                         ),

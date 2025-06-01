@@ -6,45 +6,51 @@ import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:quote_app/models/quote_model.dart';
 
+import 'models/quote_history_model.dart';
+
 class QuoteController extends GetxController {
   var quote = Rxn<QuoteModel>();
+
   late Timer _timer;
   late Box<QuoteModel> storedFavoritesBox;
+  late Box<QuoteHistoryModel> quoteHistoryBox;
   late String lastQuote;
   var isLoading = true.obs;
   RxList<QuoteModel> favorites = <QuoteModel>[].obs;
+  RxList<QuoteHistoryModel> quoteHistory= <QuoteHistoryModel>[].obs;
   var isFav = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    fetchQuotes();
+    quoteHistoryBox = Hive.box('quoteHistoryBox');
+    loadQuote();
     storedFavoritesBox = Hive.box('favQuotes');
-    final lastQuoteBox = Hive.box('lastQuote');
-    final name = lastQuoteBox.get(2);
-    print('name: $name');
     assignFav();
-    _timer = Timer.periodic(const Duration(minutes: 10), (_) {
-      isLoading.value = true;
-      isFav.value = false;
-      fetchQuotes();
-    });
   }
-
+  clearFavorites(){
+    final favBox= Hive.box<QuoteModel>('favQuotes');
+    favBox.clear();
+    print('cleared');
+    refresh();
+    update();
+  }
   void assignFav() {
     favorites.assignAll(storedFavoritesBox.values.toList());
+  }
+    void assignHistory() {
+    quoteHistory.assignAll(quoteHistoryBox.values.toList());
   }
 
   void removeFav(int currentQuoteId) {
     favorites.removeAt(currentQuoteId);
     final key = storedFavoritesBox.keyAt(currentQuoteId);
     storedFavoritesBox.delete(key);
-    update();
+    refresh();
     assignFav();
   }
 
   void deleteFromFav(currentQuote) {
-    favorites.remove(currentQuote);
     final indexToRemove =
         favorites.indexWhere((q) => q.index == currentQuote.index);
     final key = storedFavoritesBox.keyAt(indexToRemove);
@@ -96,16 +102,51 @@ class QuoteController extends GetxController {
     assignFav();
   }
 
-  Future<void> fetchQuotes() async {
+  void loadQuote() {
+    final now = DateTime.now();
+    
+    if (quoteHistoryBox.isNotEmpty) {
+      print('......quoteHistoryBox.isNotEmpty');
+      final stored = quoteHistoryBox.getAt(0)!;
+      final elapsed = now.difference(stored.lastShownTime);
+
+      if (elapsed < const Duration(seconds: 10)) {
+         print('......elapsed < const Duration(minutes: 10)');
+        quote.value = stored.history.last;
+        isLoading.value = false;
+        return;
+      }
+    }
+
+    _fetchNewQuote();
+  }
+
+  void _fetchNewQuote() async {
+    print('......_fetchNewQuote');
     final response =
         await http.get(Uri.parse('https://dummyjson.com/quotes/random'));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      quote.value = QuoteModel(
+      final newQuote = QuoteModel(
         quote: data['quote'],
         index: data['id'],
         writer: data['author'],
       );
+      final now = DateTime.now();
+
+      if (quoteHistoryBox.isEmpty) {
+        quoteHistoryBox
+            .add(QuoteHistoryModel(history: [newQuote], lastShownTime: now));
+      } else {
+        
+        final stored = quoteHistoryBox.getAt(0)!;
+        print('new quote: ${newQuote.quote}');
+       
+        stored.history.add(newQuote);
+        stored.lastShownTime = now;
+        stored.save();
+      }
+      quote.value = newQuote;
       isLoading.value = false;
     } else {
       throw Exception('Failed to load quotes');

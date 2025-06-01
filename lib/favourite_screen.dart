@@ -14,30 +14,35 @@ class FavouriteScreen extends StatelessWidget {
         ),
         body: quoteController.favorites.isNotEmpty
             ? ListView.builder(
-                itemBuilder: (context, index) =>Dismissible(key: ValueKey(quoteController.favorites[index]),
-                 direction: DismissDirection.endToStart,
-            background: Container(
-              color: Colors.red,
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: const Icon(Icons.delete, color: Colors.white),
-            ),
-            onDismissed: (direction) {
-             quoteController.removeFav(index);
-            //  quoteController.deleteFromFav(quoteController.favorites[index]);
-              Get.snackbar('','',
-              titleText: const Icon(Icons.sentiment_very_dissatisfied,size: 40,),
-              messageText:const Text(
-            'Removed from favorites',style: TextStyle(fontSize: 16),
-            textAlign: TextAlign.center,
-          ), snackPosition: SnackPosition.BOTTOM);
-           
-            },
-            child: ListTile(
-              title: Text(quoteController.favorites[index].quote),
-            ),
-          )
-         /* Padding(
+                itemBuilder: (context, index) => Dismissible(
+                  key: ValueKey(quoteController.favorites[index]),
+                  direction: DismissDirection.endToStart,
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: const Icon(Icons.delete, color: Colors.white),
+                  ),
+                  onDismissed: (direction) {
+                    quoteController.removeFav(index);
+                    //  quoteController.deleteFromFav(quoteController.favorites[index]);
+                    Get.snackbar('', '',
+                        titleText: const Icon(
+                          Icons.sentiment_very_dissatisfied,
+                          size: 40,
+                        ),
+                        messageText: const Text(
+                          'Removed from favorites',
+                          style: TextStyle(fontSize: 16),
+                          textAlign: TextAlign.center,
+                        ),
+                        snackPosition: SnackPosition.BOTTOM);
+                  },
+                  child: ListTile(
+                    title: Text(quoteController.favorites[index].quote),
+                  ),
+                )
+                /* Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
                   child: ListTile(
@@ -60,7 +65,8 @@ class FavouriteScreen extends StatelessWidget {
                     ),
                   ),
                 ), */
-               , itemCount: quoteController.favorites.length,
+                ,
+                itemCount: quoteController.favorites.length,
               )
             : const Center(
                 child: Text('No favourite'),

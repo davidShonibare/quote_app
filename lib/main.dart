@@ -4,6 +4,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:quote_app/home_page.dart';
 import 'package:quote_app/models/quote_model.dart';
 
+import 'models/quote_history_model.dart';
+
 void main() async{
   
 
@@ -12,13 +14,14 @@ void main() async{
   await Hive.initFlutter();
 
   Hive.registerAdapter(QuoteModelAdapter());
-
-  await Hive.openBox<QuoteModel>('favoritesBox');
-
+  Hive.registerAdapter(QuoteHistoryModelAdapter());
+  
   //intializing hive
-  await  Hive.initFlutter();
   await Hive.openBox<QuoteModel>('favQuotes');
-  await Hive.openBox('lastQuote');
+  await Hive.openBox<QuoteHistoryModel>('quoteHistoryBox');
+  
+  /*await boxx.clear();
+ print(boxx.length); */
   runApp(const MyApp());
 }
 
@@ -28,7 +31,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
