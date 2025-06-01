@@ -86,36 +86,32 @@ class MyHomePage extends StatelessWidget {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom: 60.0),
-                      child: GestureDetector(
-                        onTap: controller.toggleFavorites,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              !controller.isFav.value
-                                  ? 'Add to Favorites'
-                                  : 'Remove from Favorites',
-                              style: const TextStyle(fontSize: 24),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 16.0),
-                              child: Obx(
-                                () => Icon(
-                                  !controller.isFav.value
-                                      ? Icons.star_border_outlined
-                                      : Icons.star,
-                                  size: 36,
-                                  color: controller.isFav.value
-                                      ? Colors.red
-                                      : const Color.fromARGB(18, 0, 0, 0),
+                        padding: const EdgeInsets.only(bottom: 120.0),
+                        child: GestureDetector(
+                          onTap: controller.toggleFavorites,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                            
+                              Padding(
+                                padding: const EdgeInsets.only(left: 16.0),
+                                child: Obx(
+                                  () => Icon(
+                                    !controller.isFav.value
+                                        ? Icons.star_border_outlined
+                                        : Icons.star,
+                                    size: 65,
+                                    color: controller.isFav.value
+                                        ? Colors.red
+                                        : const Color.fromARGB(150, 0, 0, 0),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
+                   
                   )
                 ],
               ),

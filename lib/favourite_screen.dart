@@ -24,8 +24,10 @@ class FavouriteScreen extends StatelessWidget {
                     child: const Icon(Icons.delete, color: Colors.white),
                   ),
                   onDismissed: (direction) {
+                    if (index == quoteController.favorites.length - 1) {
+                      quoteController.isFav.value = false;
+                    }
                     quoteController.removeFav(index);
-                    //  quoteController.deleteFromFav(quoteController.favorites[index]);
                     Get.snackbar('', '',
                         titleText: const Icon(
                           Icons.sentiment_very_dissatisfied,
@@ -38,8 +40,25 @@ class FavouriteScreen extends StatelessWidget {
                         ),
                         snackPosition: SnackPosition.BOTTOM);
                   },
-                  child: ListTile(
-                    title: Text(quoteController.favorites[index].quote),
+                  child: GestureDetector(
+                    onTap: () {
+                      Get.defaultDialog(
+                        titlePadding:const EdgeInsets.only(
+                          left: 20,
+                          right: 20,
+                          top: 30,
+                        ),
+                        title: quoteController.favorites[index].quote,
+                        content: Text(
+                          '- ${quoteController.favorites[index].writer}',
+                          textAlign: TextAlign.right,style: const TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      );
+                    },
+                    child: ListTile(
+                      trailing: const Icon(Icons.delete_sweep_outlined),
+                      title: Text(quoteController.favorites[index].quote),
+                    ),
                   ),
                 )
                 /* Padding(

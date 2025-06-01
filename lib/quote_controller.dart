@@ -17,33 +17,25 @@ class QuoteController extends GetxController {
   late String lastQuote;
   var isLoading = true.obs;
   RxList<QuoteModel> favorites = <QuoteModel>[].obs;
-  RxList<QuoteHistoryModel> quoteHistory= <QuoteHistoryModel>[].obs;
+  RxList<QuoteHistoryModel> quoteHistory = <QuoteHistoryModel>[].obs;
   var isFav = false.obs;
 
   @override
   void onInit() {
     super.onInit();
     quoteHistoryBox = Hive.box('quoteHistoryBox');
-    loadQuote();
     storedFavoritesBox = Hive.box('favQuotes');
     assignFav();
+    loadQuote();
+    
   }
-  clearFavorites(){
-    final favBox= Hive.box<QuoteModel>('favQuotes');
-    favBox.clear();
-    print('cleared');
-    refresh();
-    update();
-  }
+
   void assignFav() {
     favorites.assignAll(storedFavoritesBox.values.toList());
   }
-    void assignHistory() {
-    quoteHistory.assignAll(quoteHistoryBox.values.toList());
-  }
 
   void removeFav(int currentQuoteId) {
-    favorites.removeAt(currentQuoteId);
+    //favorites.removeAt(currentQuoteId);
     final key = storedFavoritesBox.keyAt(currentQuoteId);
     storedFavoritesBox.delete(key);
     refresh();
@@ -104,15 +96,19 @@ class QuoteController extends GetxController {
 
   void loadQuote() {
     final now = DateTime.now();
-    
+
     if (quoteHistoryBox.isNotEmpty) {
       print('......quoteHistoryBox.isNotEmpty');
       final stored = quoteHistoryBox.getAt(0)!;
       final elapsed = now.difference(stored.lastShownTime);
 
-      if (elapsed < const Duration(seconds: 10)) {
-         print('......elapsed < const Duration(minutes: 10)');
+      if (elapsed < const Duration(seconds: 60)) {
+        print('......elapsed < const Duration(minutes: 10)');
         quote.value = stored.history.last;
+        print('${isFav.value} dddddd');
+        final isAFav = favorites.any((q) => q.index == stored.history.last.index);
+        print('isAfav: $isAFav');
+        isFav.value = isAFav;
         isLoading.value = false;
         return;
       }
@@ -138,10 +134,9 @@ class QuoteController extends GetxController {
         quoteHistoryBox
             .add(QuoteHistoryModel(history: [newQuote], lastShownTime: now));
       } else {
-        
         final stored = quoteHistoryBox.getAt(0)!;
         print('new quote: ${newQuote.quote}');
-       
+
         stored.history.add(newQuote);
         stored.lastShownTime = now;
         stored.save();
