@@ -31,7 +31,7 @@ class MyHomePage extends StatelessWidget {
                 padding: const EdgeInsets.only(right: 32.0),
                 child: GestureDetector(
                   onTap: () => Get.to(() => FavouriteScreen()),
-                  child:const Icon(
+                  child: const Icon(
                     Icons.bookmarks,
                     size: 24,
                   ),
@@ -53,65 +53,66 @@ class MyHomePage extends StatelessWidget {
               child: Stack(
                 children: [
                   Align(
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '"${controller.quote.value!.quote}"',
-                          style: const TextStyle(
-                            fontSize: 32,
+                    alignment: Alignment.topCenter,
+                    child: Padding(
+                     padding: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 190),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '"${controller.quote.value!.quote}"',
+                            style: const TextStyle(
+                              fontSize: 32,
+                            ),overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                "- ${controller.quote.value!.writer}",
-                                style: const TextStyle(
-                                  fontStyle: FontStyle.italic,
-                                  fontSize: 14,
+                          Padding(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  "- ${controller.quote.value!.writer}",
+                                  style: const TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                    fontSize: 14,
+                                  ),
+                                  textAlign: TextAlign.right,
                                 ),
-                                textAlign: TextAlign.right,
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
-                        padding: const EdgeInsets.only(bottom: 120.0),
-                        child: GestureDetector(
-                          onTap: controller.toggleFavorites,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                            
-                              Padding(
-                                padding: const EdgeInsets.only(left: 16.0),
-                                child: Obx(
-                                  () => Icon(
-                                    !controller.isFav.value
-                                        ? Icons.star_border_outlined
-                                        : Icons.star,
-                                    size: 65,
-                                    color: controller.isFav.value
-                                        ? Colors.red
-                                        : const Color.fromARGB(150, 0, 0, 0),
-                                  ),
+                      padding: const EdgeInsets.only(bottom: 120.0),
+                      child: GestureDetector(
+                        onTap: controller.toggleFavorites,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 16.0),
+                              child: Obx(
+                                () => Icon(
+                                  !controller.isFav.value
+                                      ? Icons.star_border_outlined
+                                      : Icons.star,
+                                  size: 65,
+                                  color: controller.isFav.value
+                                      ? Colors.red
+                                      : const Color.fromARGB(150, 0, 0, 0),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                   
+                    ),
                   )
                 ],
               ),

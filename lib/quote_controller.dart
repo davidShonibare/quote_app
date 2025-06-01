@@ -70,7 +70,6 @@ class QuoteController extends GetxController {
           ),
           snackPosition: SnackPosition.BOTTOM);
       isFav.value = true;
-      print(isFav.value);
       refresh();
     } else {
       deleteFromFav(currentQuote);
@@ -89,7 +88,6 @@ class QuoteController extends GetxController {
 
       isFav.value = false;
 
-      print(isFav.value);
     }
     assignFav();
   }
@@ -98,16 +96,15 @@ class QuoteController extends GetxController {
     final now = DateTime.now();
 
     if (quoteHistoryBox.isNotEmpty) {
-      print('......quoteHistoryBox.isNotEmpty');
       final stored = quoteHistoryBox.getAt(0)!;
       final elapsed = now.difference(stored.lastShownTime);
 
       if (elapsed < const Duration(seconds: 60)) {
-        print('......elapsed < const Duration(minutes: 10)');
+
         quote.value = stored.history.last;
-        print('${isFav.value} dddddd');
+
         final isAFav = favorites.any((q) => q.index == stored.history.last.index);
-        print('isAfav: $isAFav');
+
         isFav.value = isAFav;
         isLoading.value = false;
         return;
@@ -118,7 +115,7 @@ class QuoteController extends GetxController {
   }
 
   void _fetchNewQuote() async {
-    print('......_fetchNewQuote');
+
     final response =
         await http.get(Uri.parse('https://dummyjson.com/quotes/random'));
     if (response.statusCode == 200) {
@@ -135,7 +132,7 @@ class QuoteController extends GetxController {
             .add(QuoteHistoryModel(history: [newQuote], lastShownTime: now));
       } else {
         final stored = quoteHistoryBox.getAt(0)!;
-        print('new quote: ${newQuote.quote}');
+     
 
         stored.history.add(newQuote);
         stored.lastShownTime = now;
@@ -144,6 +141,8 @@ class QuoteController extends GetxController {
       quote.value = newQuote;
       isLoading.value = false;
     } else {
+
+      isLoading.value = false;
       throw Exception('Failed to load quotes');
     }
   }
