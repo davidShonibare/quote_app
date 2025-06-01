@@ -55,9 +55,11 @@ class FavouriteScreen extends StatelessWidget {
                         ),
                       );
                     },
-                    child: ListTile(
-                      trailing: const Icon(Icons.delete_sweep_outlined),
-                      title: Text(quoteController.favorites[index].quote),
+                    child: Card(
+                      child: ListTile(
+                        trailing: const Icon(Icons.delete_sweep_outlined),
+                        title: Text(quoteController.favorites[index].quote),
+                      ),
                     ),
                   ),
                 )
